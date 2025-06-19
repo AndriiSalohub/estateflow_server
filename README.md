@@ -41,7 +41,7 @@ The EstateFlow Server powers the core functionality of the EstateFlow platform, 
 
 ## API Documentation
 
-Explore the RESTful API via Swagger at https://server-rbdb.onrender.com/api-docs/.
+Explore the RESTful API via Swagger at https://estateflow-server.onrender.com/api-docs/.
 
 ## Contributing
 
@@ -57,7 +57,7 @@ Ensure code adheres to TypeScript conventions and includes tests.
 
 ## Links
 
-- **API Documentation**: https://server-rbdb.onrender.com/api-docs/
-- **Live Client**: https://estateflow-beryl.vercel.app
-- **Client Repository**: https://github.com/EstateFlow/client
-- **Report Issues**: https://github.com/EstateFlow/server/issues
+- **API Documentation**: https://estateflow-server.onrender.com/api-docs/
+- **Live Client**: https://estateflow-client.vercel.app/
+- **Client Repository**: https://github.com/AndriiSalohub/estateflow_client
+- **Report Issues**: https://github.com/AndriiSalohub/estateflow_server/issues
