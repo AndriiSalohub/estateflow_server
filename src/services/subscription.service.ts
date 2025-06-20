@@ -85,7 +85,6 @@ export async function captureSubscriptionOrder(
   email?: string,
 ) {
   const accessToken = await getAccessToken();
-  console.log(accessToken);
 
   try {
     const res = await paypalClient.post(

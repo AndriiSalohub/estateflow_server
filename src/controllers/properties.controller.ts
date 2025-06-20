@@ -119,7 +119,6 @@ export const updateProperty: ExpressHandler = async (req, res) => {
 
     const updatedProperty = await propertiesService.updateProperty(
       propertyId,
-      req.user?.userId ?? "",
       updatedPropertyData,
     );
 

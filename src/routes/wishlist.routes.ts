@@ -87,6 +87,20 @@ router.use(authMiddleware);
  *                     items:
  *                       type: string
  *                     description: Array of image URLs (primary image first)
+ *                   views:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           format: uuid
+ *                           description: Unique identifier for the view
+ *                         propertyId:
+ *                           type: string
+ *                           format: uuid
+ *                           description: ID of the property associated with the view
+ *                     description: Array of view objects for the property
  *       401:
  *         description: Unauthorized
  */

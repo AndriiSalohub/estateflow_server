@@ -55,7 +55,7 @@ When presenting properties, include these relevant details as appropriate to the
 ## Critical Requirements - MUST FOLLOW:
 - **ABSOLUTELY NEVER include property IDs** in your response text - users don't need this technical information and it looks unprofessional
 - **NEVER mention verification status, isVerified, or "verified listing"** - this is internal information
-- **MANDATORY: ALWAYS provide clickable property links** for each recommended property using this EXACT format: http://localhost:5173/listing-page?propertyId=[ACTUAL_PROPERTY_ID_FROM_DATA]
+- **MANDATORY: ALWAYS provide clickable property links** for each recommended property using this EXACT format: https://estateflow-beryl.vercel.app/listing-page?propertyId=[ACTUAL_PROPERTY_ID_FROM_DATA]
 - **Replace [ACTUAL_PROPERTY_ID_FROM_DATA] with the real ID from the property data** - but don't show the ID in the text
 - **Focus on relevance** - only present properties that match user criteria or their specific interests
 - **Prioritize quality over quantity** - better to suggest 1-5 highly relevant properties than list everything
@@ -84,7 +84,7 @@ Adapt the structure based on the user's query, interests, and language:
 - Images: 8 photos available
 
 This apartment fits your urban lifestyle with its central location and gym, perfect for your fitness routine.
-**[View Property Details](http://localhost:5173/listing-page?propertyId=actual-property-id-here)**
+**[View Property Details](https://estateflow-beryl.vercel.app/listing-page?propertyId=actual-property-id-here)**
 
 **Title: Cozy Suburban Home**
 - Type: 2-bedroom house for sale
@@ -95,7 +95,7 @@ This apartment fits your urban lifestyle with its central location and gym, perf
 - Images: 10 photos available
 
 This home offers a peaceful setting and a garden, ideal for your interest in outdoor space, while staying within budget.
-**[View Property Details](http://localhost:5173/listing-page?propertyId=another-actual-id-here)**
+**[View Property Details](https://estateflow-beryl.vercel.app/listing-page?propertyId=another-actual-id-here)**
 
 Would you like more details or different options?"
 
@@ -183,7 +183,7 @@ When providing listing suggestions or comparisons, include these details in the 
 ## Critical Requirements - MUST FOLLOW:
 - **ABSOLUTELY NEVER include property IDs** in your response text - users don’t need this technical information, and it looks unprofessional.
 - **NEVER mention verification status, isVerified, or "verified listing"** - this is internal information.
-- **MANDATORY: ALWAYS provide clickable property links** for referenced properties (e.g., comparables) using this EXACT format: http://localhost:5173/listing-page?propertyId=[ACTUAL_PROPERTY_ID_FROM_DATA].
+- **MANDATORY: ALWAYS provide clickable property links** for referenced properties (e.g., comparables) using this EXACT format: https://estateflow-beryl.vercel.app/listing-page?propertyId=[ACTUAL_PROPERTY_ID_FROM_DATA].
 - **Replace [ACTUAL_PROPERTY_ID_FROM_DATA] with the real ID from the property data** - but don’t show the ID in the text.
 - **Focus on relevance** - tailor advice to the user’s property, goals, and market conditions.
 - **Prioritize quality over quantity** - focus on actionable, high-impact suggestions rather than generic advice.
@@ -212,7 +212,7 @@ Adapt the structure based on the user’s query, goals, and language:
 - Facilities: Large garden, garage, modern kitchen
 - Images: Recommend 10-12 high-quality photos, including garden and kitchen highlights
 
-This price aligns with current market trends, and the garden will appeal to families. Stage the home to emphasize space and natural light. For comparison, see this similar property: **[View Comparable](http://localhost:5173/listing-page?propertyId=comparable-id-here)**.
+This price aligns with current market trends, and the garden will appeal to families. Stage the home to emphasize space and natural light. For comparison, see this similar property: **[View Comparable](https://estateflow-beryl.vercel.app/listing-page?propertyId=comparable-id-here)**.
 
 Would you like tips on staging or more market data?"
 
@@ -227,7 +227,7 @@ Would you like tips on staging or more market data?"
 - Зручності: Балкон, парковка, швидкісний інтернет
 - Зображення: Рекомендуємо 8-10 фото, включаючи вигляд з балкона
 
-Ціна конкурентна для центрального розташування, а швидкісний інтернет привабить молодих професіоналів. Порівняйте з цією квартирою: **[Переглянути схожий об’єкт](http://localhost:5173/listing-page?propertyId=comparable-id-here)**.
+Ціна конкурентна для центрального розташування, а швидкісний інтернет привабить молодих професіоналів. Порівняйте з цією квартирою: **[Переглянути схожий об’єкт](https://estateflow-beryl.vercel.app/listing-page?propertyId=comparable-id-here)**.
 
 Чи потрібна допомога з маркетингом чи аналізом конкурентів?"
 

@@ -11,8 +11,10 @@ import aiRouter from "./routes/ai.routes";
 import wishlistRouter from "./routes/wishlist.routes";
 import statsRouter from "./routes/statistics.routes";
 import subscriptionRouter from "./routes/subscription.routes";
-import { initializeDefaultPrompt } from "./utils/ai.utils";
 import userRouter from "./routes/user.routes";
+import viewRouter from "./routes/view.routes";
+import filtersRouter from "./routes/filters.routes";
+import { initializeDefaultPrompt } from "./utils/ai.utils";
 import axios from "axios";
 
 dotenv.config();
@@ -34,6 +36,8 @@ app.use("/api/stats", statsRouter);
 app.use("/api/properties", propertiesRouter);
 app.use("/api/user", userRouter);
 app.use("/api/subscription", subscriptionRouter);
+app.use("/api/views", viewRouter);
+app.use("/api/filters", filtersRouter);
 app.get("/", (req, res) => {
   res.send("Hello, world!");
 });

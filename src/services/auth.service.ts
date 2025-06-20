@@ -44,7 +44,6 @@ export const register = async ({
     .select()
     .from(users)
     .where(eq(users.email, email));
-  console.log(existingUser[0]);
 
   if (existingUser.length > 0) {
     throw new Error("User already exists");

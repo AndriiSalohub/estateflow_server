@@ -1,6 +1,6 @@
 import { db } from "../db";
 import { sql } from "drizzle-orm";
-import { and, between, eq } from 'drizzle-orm';
+import { and, between, eq } from "drizzle-orm";
 import { properties } from "../db/schema/properties.schema";
 import { propertyViews } from "../db/schema/property_views.schema";
 import { users } from "../db/schema/users.schema";
@@ -164,39 +164,52 @@ export const getAveragePriceGrowth = async (
 export const getPropertyViewStatsByDate = async (
   propertyId: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ) => {
+  const adjustedEndDate = new Date(endDate);
+  adjustedEndDate.setHours(23, 59, 59, 999);
+
   const result = await db
     .select({ count: sql<number>`count(*)` })
     .from(propertyViews)
     .where(
       and(
         eq(propertyViews.propertyId, propertyId),
-        between(propertyViews.viewedAt, startDate, endDate)
-      )
+        between(propertyViews.viewedAt, startDate, adjustedEndDate),
+      ),
     );
 
   return result[0]?.count ?? 0;
 };
 
 export const getTotalSales = async (startDate: Date, endDate: Date) => {
+  const adjustedEndDate = new Date(endDate);
+  adjustedEndDate.setHours(23, 59, 59, 999);
+
   const result = await db.execute(sql`
     SELECT 
       COUNT(*)::int AS total_sales,
       SUM(price)::numeric AS total_amount
     FROM ${properties}
-    WHERE updated_at BETWEEN ${startDate} AND ${endDate}
+    WHERE updated_at BETWEEN ${startDate} AND ${adjustedEndDate}
     AND status IN ('sold', 'rented')
   `);
 
   return {
     totalSales: (result as any).rows?.[0]?.total_sales ?? 0,
-    totalAmount: (result as any).rows?.[0]?.total_amount ?? '0',
+    totalAmount: (result as any).rows?.[0]?.total_amount ?? "0",
   };
 };
 
-export const getTopViewedProperties = async (startDate: Date, endDate: Date, limit = 10) => {
-    const result = await db.execute(sql`
+export const getTopViewedProperties = async (
+  startDate: Date,
+  endDate: Date,
+  limit = 10,
+) => {
+  const adjustedEndDate = new Date(endDate);
+  adjustedEndDate.setHours(23, 59, 59, 999);
+
+  const result = await db.execute(sql`
     SELECT 
       p.id,
       p.title,
@@ -206,7 +219,7 @@ export const getTopViewedProperties = async (startDate: Date, endDate: Date, lim
     FROM ${properties} p
     LEFT JOIN ${propertyViews} pv 
       ON p.id = pv.property_id 
-      AND pv.viewed_at BETWEEN ${startDate} AND ${endDate}
+      AND pv.viewed_at BETWEEN ${startDate} AND ${adjustedEndDate}
     GROUP BY p.id, p.title, p.price, p.address
     ORDER BY view_count DESC
     LIMIT ${limit}
@@ -216,18 +229,23 @@ export const getTopViewedProperties = async (startDate: Date, endDate: Date, lim
 };
 
 export const getNewUsersStats = async (startDate: Date, endDate: Date) => {
+  const adjustedEndDate = new Date(endDate);
+  adjustedEndDate.setHours(23, 59, 59, 999);
+
   const result = await db.execute(sql`
     SELECT 
       COUNT(CASE WHEN role = 'renter_buyer' THEN 1 END)::int AS new_buyers,
       COUNT(CASE WHEN role = 'private_seller' THEN 1 END)::int AS new_sellers,
       COUNT(CASE WHEN role = 'agency' THEN 1 END)::int AS new_agencies
     FROM ${users}
-    WHERE created_at BETWEEN ${startDate} AND ${endDate}
+    WHERE created_at BETWEEN ${startDate} AND ${adjustedEndDate}
   `);
 
-  return (result as any).rows?.[0] ?? {
-    new_buyers: 0,
-    new_sellers: 0,
-    new_agencies: 0
-  };
+  return (
+    (result as any).rows?.[0] ?? {
+      new_buyers: 0,
+      new_sellers: 0,
+      new_agencies: 0,
+    }
+  );
 };

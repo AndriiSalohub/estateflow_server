@@ -59,6 +59,7 @@ export const getUserById = async (userId: string) => {
       bio: users.bio,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
+      listingLimit: users.listingLimit,
     })
     .from(users)
     .where(eq(users.id, userId))
@@ -157,6 +158,7 @@ export const getUserById = async (userId: string) => {
     bio: user.bio,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    listingLimit: user.listingLimit,
     properties: propertiesWithImages,
     subscription: subscriptionResult.length > 0 ? subscriptionResult[0] : {},
   };
@@ -169,7 +171,12 @@ export const getAllUsers = async (userId: string) => {
 
 export const updateUser = async (
   userId: string,
-  data: { username?: string; avatarUrl?: string; bio?: string, paypalCredentials?: string },
+  data: {
+    username?: string;
+    avatarUrl?: string;
+    bio?: string;
+    paypalCredentials?: string;
+  },
 ) => {
   const updateData: any = {};
   if (data.username !== undefined) updateData.username = data.username;
