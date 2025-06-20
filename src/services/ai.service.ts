@@ -409,10 +409,8 @@ export const sendMessage = async (userId: string, message: string) => {
   const result = await chat.sendMessage(message);
   const response = await result.response;
   const text = response.text();
-  console.log("AI Response:", text);
 
   const parsedProperties = parseAIResponse(text);
-  console.log(parsedProperties);
 
   const aiResponseIndex = userMessageIndex + 1;
 

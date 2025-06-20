@@ -581,7 +581,7 @@ router.delete("/:userId", requireRole(["admin"]), deleteUser);
  *       500:
  *         description: Internal server error
  */
-router.get("/:userId", authMiddleware, getUserById);
+router.get("/:userId", getUserById);
 
 /**
  * @swagger

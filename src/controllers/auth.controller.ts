@@ -11,7 +11,6 @@ export const register: ExpressHandler = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
     await authService.register({ username, email, password, role });
-    console.log("controller");
     res
       .status(201)
       .json({ message: "Registration successful. Please verify your email." });
