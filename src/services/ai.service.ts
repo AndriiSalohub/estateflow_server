@@ -1,15 +1,15 @@
-import { eq, and } from "drizzle-orm";
-import { db } from "../db";
-import { users } from "../db/schema/users.schema";
-import { conversations } from "../db/schema/conversations.schema";
-import { messages } from "../db/schema/messages.schema";
-import { v4 as uuidv4 } from "uuid";
-import { systemPrompts } from "../db/schema/system_prompts.schema";
-import { getProperties } from "./properties.service";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { parseAIResponse } from "../utils/ai.utils";
+import { eq, and } from 'drizzle-orm';
+import { db } from '../db';
+import { users } from '../db/schema/users.schema';
+import { conversations } from '../db/schema/conversations.schema';
+import { messages } from '../db/schema/messages.schema';
+import { v4 as uuidv4 } from 'uuid';
+import { systemPrompts } from '../db/schema/system_prompts.schema';
+import { getProperties } from './properties.service';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { parseAIResponse } from '../utils/ai.utils';
 
-export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? "");
+export const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '');
 export const activeChatSessions = new Map();
 
 export const getAllSystemPrompts = async () => {
@@ -26,13 +26,13 @@ export const getDefaultSystemPrompt = async (userId: string) => {
       .limit(1);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     const promptName =
-      user.role === "renter_buyer"
-        ? "default-renter-buyer"
-        : "default-seller-agency";
+      user.role === 'renter_buyer'
+        ? 'default-renter-buyer'
+        : 'default-seller-agency';
 
     const prompt = await db
       .select()
@@ -40,8 +40,8 @@ export const getDefaultSystemPrompt = async (userId: string) => {
       .where(
         and(
           eq(systemPrompts.isDefault, true),
-          eq(systemPrompts.name, promptName),
-        ),
+          eq(systemPrompts.name, promptName)
+        )
       )
       .limit(1);
 
@@ -51,13 +51,13 @@ export const getDefaultSystemPrompt = async (userId: string) => {
 
     if (prompt.length > 1) {
       console.log(
-        `Multiple default system prompts found for ${promptName}; returning the first one`,
+        `Multiple default system prompts found for ${promptName}; returning the first one`
       );
     }
 
     return prompt[0];
   } catch (error: any) {
-    console.error("Error fetching default system prompt:", error);
+    console.error('Error fetching default system prompt:', error);
     throw error;
   }
 };
@@ -65,7 +65,7 @@ export const getDefaultSystemPrompt = async (userId: string) => {
 export const updateSystemPrompt = async (
   userId: string,
   name: string,
-  newContent: string,
+  newContent: string
 ) => {
   try {
     const [user] = await db
@@ -75,11 +75,11 @@ export const updateSystemPrompt = async (
       .limit(1);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
-    if (user.role !== "admin") {
-      throw new Error("Only admins can update system prompts");
+    if (user.role !== 'admin') {
+      throw new Error('Only admins can update system prompts');
     }
 
     const [updatedPrompt] = await db
@@ -89,14 +89,14 @@ export const updateSystemPrompt = async (
       .returning();
 
     if (!updatedPrompt) {
-      throw new Error("System prompt not found");
+      throw new Error('System prompt not found');
     }
 
     return updatedPrompt;
   } catch (error: any) {
     console.error(
       `Error updating system prompt (userId: ${userId}, name: ${name}):`,
-      error,
+      error
     );
     throw error;
   }
@@ -108,12 +108,12 @@ export const createConversation = async (userId: string, title?: string) => {
       .select()
       .from(conversations)
       .where(
-        and(eq(conversations.userId, userId), eq(conversations.isActive, true)),
+        and(eq(conversations.userId, userId), eq(conversations.isActive, true))
       )
       .limit(1);
 
     if (existingConversation.length > 0) {
-      throw new Error("User already has an active conversation");
+      throw new Error('User already has an active conversation');
     }
 
     const [user] = await db
@@ -123,49 +123,49 @@ export const createConversation = async (userId: string, title?: string) => {
       .limit(1);
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     const defaultTitle =
-      user.role === "renter_buyer"
-        ? "Property Search Chat"
-        : "Property Listing Chat";
+      user.role === 'renter_buyer'
+        ? 'Property Search Chat'
+        : 'Property Listing Chat';
 
     const conversationTitle = title || defaultTitle;
 
     const defaultPrompt = await getDefaultSystemPrompt(userId);
-    const propertiesList = await getProperties("active");
+    const propertiesList = await getProperties('active');
 
     if (propertiesList.length === 0) {
-      throw new Error("No properties found for analysis");
+      throw new Error('No properties found for analysis');
     }
 
     const propertiesSummary = propertiesList
       .map(
         (p) => `
       - ID: ${p.id}
-      - Title: ${p.title || "Unknown"}
-      - Type: ${p.propertyType || "Unknown"}
-      - Descritpino: ${p.description || "Unknown"}
-      - Transaction: ${p.transactionType || "Unknown"}
-      - Price: ${p.price ? `${p.price} ${p.currency}` : "Unknown"}
-      - Size: ${p.size ? `${p.size} sqm` : "Unknown"}
-      - Rooms: ${p.rooms || "Unknown"}
-      - Address: ${p.address || "Unknown"}
-      - Status: ${p.status || "Unknown"}
-      - Is Verified: ${p.isVerified ? "Yes" : "No"}
+      - Title: ${p.title || 'Unknown'}
+      - Type: ${p.propertyType || 'Unknown'}
+      - Descritpino: ${p.description || 'Unknown'}
+      - Transaction: ${p.transactionType || 'Unknown'}
+      - Price: ${p.price ? `${p.price} ${p.currency}` : 'Unknown'}
+      - Size: ${p.size ? `${p.size} sqm` : 'Unknown'}
+      - Rooms: ${p.rooms || 'Unknown'}
+      - Address: ${p.address || 'Unknown'}
+      - Status: ${p.status || 'Unknown'}
+      - Is Verified: ${p.isVerified ? 'Yes' : 'No'}
       - Images: ${p.images?.length || 0} images
-      - Facilities: ${p.facilities || "Unknown"}
+      - Facilities: ${p.facilities || 'Unknown'}
       - Pricing History: ${
         p.pricingHistory?.length
           ? p.pricingHistory
               .map((ph) => `${ph.price} ${ph.currency} on ${ph.effectiveDate}`)
-              .join(", ")
-          : "None"
+              .join(', ')
+          : 'None'
       }
-    `,
+    `
       )
-      .join("\n");
+      .join('\n');
 
     const initialMessageContent = `
       ${defaultPrompt.content}
@@ -192,7 +192,7 @@ export const createConversation = async (userId: string, title?: string) => {
       .values({
         id: uuidv4(),
         conversationId: newConversation[0].id,
-        sender: "system",
+        sender: 'system',
         content: initialMessageContent,
         createdAt: new Date(),
         isVisible: false,
@@ -200,31 +200,31 @@ export const createConversation = async (userId: string, title?: string) => {
       .returning();
 
     const welcomeMessageContent =
-      user.role === "renter_buyer"
+      user.role === 'renter_buyer'
         ? "Hi, I'm here to analyze properties for you."
         : "Hi, I'm here to help you list and market your properties effectively.";
 
     await db.insert(messages).values({
       id: uuidv4(),
       conversationId: newConversation[0].id,
-      sender: "ai",
+      sender: 'ai',
       content: welcomeMessageContent,
       createdAt: new Date(),
       isVisible: true,
     });
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: 'gemini-robotics-er-1.5-preview',
     });
 
     const chat = model.startChat({
       history: [
         {
-          role: "user",
+          role: 'user',
           parts: [{ text: initialMessageContent }],
         },
         {
-          role: "model",
+          role: 'model',
           parts: [{ text: welcomeMessageContent }],
         },
       ],
@@ -238,7 +238,7 @@ export const createConversation = async (userId: string, title?: string) => {
   } catch (error: any) {
     console.error(
       `Error creating conversation (userId: ${userId}, title: ${title}):`,
-      error,
+      error
     );
     throw error;
   }
@@ -251,17 +251,17 @@ export const getConversationHistory = async (userId: string) => {
     .where(eq(users.id, userId));
 
   if (user.length === 0) {
-    throw new Error("User with this id does not exist");
+    throw new Error('User with this id does not exist');
   }
   const conversation = await db
     .select()
     .from(conversations)
     .where(
-      and(eq(conversations.userId, userId), eq(conversations.isActive, true)),
+      and(eq(conversations.userId, userId), eq(conversations.isActive, true))
     );
 
   if (conversation.length === 0) {
-    throw new Error("No active conversation found");
+    throw new Error('No active conversation found');
   }
 
   const conversationId = conversation[0].id;
@@ -295,18 +295,18 @@ export const getVisibleConversationHistory = async (userId: string) => {
     .where(eq(users.id, userId));
 
   if (user.length === 0) {
-    throw new Error("User with this id does not exist");
+    throw new Error('User with this id does not exist');
   }
 
   const conversation = await db
     .select()
     .from(conversations)
     .where(
-      and(eq(conversations.userId, userId), eq(conversations.isActive, true)),
+      and(eq(conversations.userId, userId), eq(conversations.isActive, true))
     );
 
   if (conversation.length === 0) {
-    throw new Error("No active conversation found");
+    throw new Error('No active conversation found');
   }
 
   const conversationId = conversation[0].id;
@@ -322,8 +322,8 @@ export const getVisibleConversationHistory = async (userId: string) => {
     .where(
       and(
         eq(messages.conversationId, conversationId),
-        eq(messages.isVisible, true),
-      ),
+        eq(messages.isVisible, true)
+      )
     )
     .orderBy(messages.createdAt);
 
@@ -339,19 +339,19 @@ export const getVisibleConversationHistory = async (userId: string) => {
 
 export const sendMessage = async (userId: string, message: string) => {
   if (!userId) {
-    throw new Error("Unauthorized");
+    throw new Error('Unauthorized');
   }
 
   let [conversation] = await db
     .select()
     .from(conversations)
     .where(
-      and(eq(conversations.userId, userId), eq(conversations.isActive, true)),
+      and(eq(conversations.userId, userId), eq(conversations.isActive, true))
     )
     .limit(1);
 
   if (!conversation) {
-    throw new Error("No active conversation found");
+    throw new Error('No active conversation found');
   }
 
   const { messages: messageHistory } = await getConversationHistory(userId);
@@ -361,7 +361,7 @@ export const sendMessage = async (userId: string, message: string) => {
   const userMessage = {
     id: uuidv4(),
     conversationId: conversation.id,
-    sender: "user" as const,
+    sender: 'user' as const,
     content: message,
     createdAt: new Date(),
     isVisible: true,
@@ -376,26 +376,26 @@ export const sendMessage = async (userId: string, message: string) => {
   if (!chat) {
     const history = [];
     for (const msg of messageHistory) {
-      if (msg.sender === "system") {
+      if (msg.sender === 'system') {
         history.push({
-          role: "user",
+          role: 'user',
           parts: [{ text: msg.content }],
         });
-      } else if (msg.sender === "user") {
+      } else if (msg.sender === 'user') {
         history.push({
-          role: "user",
+          role: 'user',
           parts: [{ text: msg.content }],
         });
-      } else if (msg.sender === "ai") {
+      } else if (msg.sender === 'ai') {
         history.push({
-          role: "model",
+          role: 'model',
           parts: [{ text: msg.content }],
         });
       }
     }
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: 'gemini-robotics-er-1.5-preview',
     });
     chat = model.startChat({
       history: history.slice(0, -1),
@@ -417,7 +417,7 @@ export const sendMessage = async (userId: string, message: string) => {
   const aiResponse = {
     id: uuidv4(),
     conversationId: conversation.id,
-    sender: "ai" as const,
+    sender: 'ai' as const,
     content: text,
     createdAt: new Date(),
     isVisible: true,
